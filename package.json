@@ -1,0 +1,23 @@
+{
+  "name": "youtube-music-to-spotify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Move YouTube Music playlists and liked songs to Spotify",
+  "license": "MIT",
+  "scripts": {
+    "setup": "npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "cd backend && python3 -m venv .venv && ./.venv/bin/python -m pip install --upgrade pip && ./.venv/bin/python -m pip install -e \".[dev]\"",
+    "setup:frontend": "cd frontend && npm install",
+    "dev": "concurrently --names \"api,ui\" --prefix-colors \"green,cyan\" --kill-others \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && ./.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload",
+    "dev:frontend": "cd frontend && npm run dev",
+    "test": "cd backend && ./.venv/bin/python -m pytest -q",
+    "typecheck": "cd frontend && npx tsc --noEmit",
+    "build": "cd frontend && npm run build",
+    "check": "cd backend && ./.venv/bin/python check_setup.py",
+    "security-check": "python3 scripts/security_check.py"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

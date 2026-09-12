@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------
+# Secrets. Never commit these.
+#
+# backend/data/oauth.json     = full access to your YouTube Music account
+# backend/data/spotify_token.json = full access to your Spotify account
+# .env                        = your Spotify and Google client secrets
+#
+# If you ever commit one by accident, revoke it immediately in the Google Cloud
+# Console and the Spotify developer dashboard. Deleting the commit is not enough.
+# ---------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+backend/data/
+oauth.json
+*token*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Session notes and tool leftovers, not part of the product
+HANDOVER.md
+.playwright-mcp/
+.claude/
+
+# Editors and OS
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/* One place for the colours, so the three screens stay consistent.
+   A dark palette with one accent per service: green for Spotify, red for
+   YouTube. "raised" is one step lighter than "surface", for chips and hovers. */
+@theme {
+  --color-canvas: #0a0c10;
+  --color-surface: #14171e;
+  --color-raised: #1b1f28;
+  --color-ink: #f2f4f8;
+  --color-muted: #8f96a3;
+  --color-line: #262b35;
+  --color-spotify: #1ed760;
+  --color-spotify-deep: #128d43;
+  --color-youtube: #ff3347;
+}
+
+/* Faint service colours bleeding in from the corners. Fixed, so it does not
+   scroll and costs nothing to paint. */
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family:
+    var(--font-inter),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 38rem at 88% -12%, rgb(30 215 96 / 0.06), transparent 60%),
+    radial-gradient(48rem 48rem at -8% 108%, rgb(255 51 71 / 0.05), transparent 55%);
+}
+
+/* Numbers in the results table line up when they share a width. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Small touches of polish everywhere. */
+::selection {
+  background-color: rgb(30 215 96 / 0.3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-spotify);
+  outline-offset: 2px;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--color-spotify);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+  border: 2px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* A moving stripe for the progress bar while a job is running.
+   The width cannot move while the library is being read from YouTube, and a
+   still bar reads as a hang, so the stripe carries on regardless. */
+@keyframes progress-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 2rem 0;
+  }
+}
+
+.progress-active {
+  background-image: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.35) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.35) 75%,
+    transparent 75%
+  );
+  background-size: 2rem 2rem;
+  animation: progress-stripes 0.7s linear infinite;
+}
+
+/* A bar with nowhere to go yet: slides back and forth instead of standing still. */
+@keyframes progress-sweep {
+  0% {
+    left: -35%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.progress-sweep {
+  animation: progress-sweep 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-active,
+  .progress-sweep {
+    animation: none;
+  }
+}

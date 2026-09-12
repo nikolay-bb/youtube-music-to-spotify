@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#12141a"/>
+  <!-- a music note crossing from the YouTube red side to the Spotify green side -->
+  <circle cx="11" cy="21" r="3.6" fill="#ff0033"/>
+  <rect x="13.6" y="8" width="1.9" height="13" fill="#ff0033"/>
+  <path d="M15.5 8 L23 10.2 L23 13.4 L15.5 11.2 Z" fill="#1db954"/>
+  <circle cx="23" cy="17.5" r="3.2" fill="#1db954"/>
+  <rect x="21.4" y="10.2" width="1.7" height="7.6" fill="#1db954"/>
+</svg>
