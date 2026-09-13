@@ -173,6 +173,48 @@ songs are reported instead of added. Spotify allows about 1,000 searches a
 day for a personal app, so the job saves as it goes and resumes the next day.
 The code is commented for reading; start with `backend/app/matcher.py`.
 
+## API calls
+
+Every request the app sends to YouTube and Spotify, and when it sends it. The
+page in your browser only talks to the backend on your own computer; the
+backend makes all of these calls. Nothing else is contacted.
+
+### Spotify
+
+| Call | When | Why |
+|---|---|---|
+| `GET accounts.spotify.com/authorize` | You press **Connect Spotify** | Opens Spotify's own login and permission page in your browser |
+| `POST accounts.spotify.com/api/token` | Once, straight after you log in | Swaps the one-time login code for a token |
+| `POST accounts.spotify.com/api/token` | About once an hour while running | Refreshes the token before it expires |
+| `GET api.spotify.com/v1/me` | Connect screen, and the start of every run | Checks the login works and shows who is signed in |
+| `GET api.spotify.com/v1/search?type=track&limit=10` | Up to 3 per song, plus 1 check at the start of a run | Finds the song. This is the call the daily limit counts |
+| `GET api.spotify.com/v1/me/playlists` | Before writing each playlist | Looks for a playlist with the same name, so it is reused, not duplicated |
+| `POST api.spotify.com/v1/me/playlists` | Only if no playlist with that name exists | Creates a private playlist |
+| `GET api.spotify.com/v1/playlists/{id}/items` | Before adding to an existing playlist | Reads the songs already there, so none are added twice |
+| `POST api.spotify.com/v1/playlists/{id}/items` | Once per 100 songs added | Adds the matched songs |
+
+A **dry run** only uses `/me` and `/search`. It never creates or changes a
+playlist. `npm run check` also sends one `POST /api/token` to test your keys.
+
+### YouTube (through Google)
+
+| Call | When | Why |
+|---|---|---|
+| `GET accounts.google.com/o/oauth2/v2/auth` | You press **Connect YouTube** | Opens Google's own login page, asking for read-only access |
+| `POST oauth2.googleapis.com/token` | Once, straight after you log in | Swaps the one-time login code for a token |
+| `POST oauth2.googleapis.com/token` | About once an hour, and on `npm run check` | Refreshes the token |
+| `GET youtube/v3/channels?mine=true` | Connect screen | Checks the login works and shows who is signed in |
+| `GET youtube/v3/playlists?mine=true` | Choose screen, 50 playlists per call | Lists your playlists and their song counts |
+| `GET youtube/v3/playlistItems?playlistId=LM` | Choose screen | Counts your liked songs |
+| `GET youtube/v3/playlists?id={id}` | Start of a run, once per playlist | Reads the playlist's name |
+| `GET youtube/v3/playlistItems?playlistId={id}` | Start of a run, 50 songs per call | Lists the songs in the playlist |
+| `GET youtube/v3/videos?id={ids}` | Start of a run, 50 songs per call | Reads each song's title, artist channel and length |
+
+All YouTube calls are read-only. The app asks for the `youtube.readonly`
+permission, so it cannot change anything on your YouTube account. Each call
+costs 1 unit of Google's free 10,000-unit daily quota; reading a library of
+2,000 songs uses about 100.
+
 ## Licence
 
 MIT. See [LICENSE](LICENSE). Not affiliated with Spotify, YouTube or Google.
